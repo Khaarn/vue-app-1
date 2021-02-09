@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+    <title>What can you eat for lunch</title>
+    <link rel="stylesheet" href="Test.css">
+</head>
+<body>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.5/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+
+<div id="app">
+    <h1>Repas Orvault</h1>
+
+    <!--<pre>{{commits}}</pre>-->
+
+    <ul>
+        <li v-for="record in commits">
+            <span class="type_menu">{{ record.fields.type_menu }}</span> du <span class="date">{{ record.fields.date | formatDate }}</span>
+            <br>
+            <span class="repas">{{ record.fields.repas }}</span>
+        </li>
+    </ul>
+</div>
+
+<script>
+    // L'api est toute cassé donc j'ai récupérer le json de l'api que j'ai mis dans Donnes.json et je fais le lien avec ça.
+    // Si je trouve l'api fonctionnel j'aurais juste à changer le const apiURL et ça devrait fonctionné.
+    const apiURL = './Donnes.json'
+
+    const demo = new Vue({
+        el: '#app',
+        data () {
+            return {
+                info: null,
+                commits: []
+            }
+        },
+        created: function () {
+            this.fetchData()
+        },
+        filters: {
+            formatDate: function (v) {
+                return v.replace(/T|Z/g, ' ')
+            }
+        },
+        methods: {
+            fetchData: async function () {
+                try {
+                    const response = await axios.get(apiURL)
+                    this.commits = response.data
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>
